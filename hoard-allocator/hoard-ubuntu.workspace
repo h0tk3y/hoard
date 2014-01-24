@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="hoard-ubuntu" Database="./hoard-ubuntu.tags">
+  <Project Name="hoard" Path="hoard.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="hoard" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="hoard" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="test-executable" Selected="no">
+      <Project Name="hoard" ConfigName="test-executable"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="malloc-testing" Database="./malloc-testing.tags">
+  <Project Name="hoard_testing" Path="hoard_testing.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="hoard_testing" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="hoard_testing" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
