@@ -1,36 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Session Name="/home/ubuntu/Workspace/hoard_codelite/hoard/hoard-ubuntu.workspace">
-  <int Value="14" Name="m_selectedTab"/>
-  <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/hoard-ubuntu.workspace" Name="m_workspaceName"/>
+<Session Name="/home/ubuntu/Workspace/hoard/hoard-allocator/hoard-ubuntu.workspace">
+  <int Value="4" Name="m_selectedTab"/>
+  <wxString Value="/home/ubuntu/Workspace/hoard/hoard-allocator/hoard-ubuntu.workspace" Name="m_workspaceName"/>
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/mlinked_list.h" Name="FileName"/>
-      <int Value="151" Name="FirstVisibleLine"/>
-      <int Value="169" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/tests.cpp" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="3" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/internals.cpp" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="29" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/usr/include/c++/4.6/bits/stl_vector.h" Name="FileName"/>
-      <int Value="809" Name="FirstVisibleLine"/>
-      <int Value="839" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
       <wxString Value="/usr/include/c++/4.6/ext/new_allocator.h" Name="FileName"/>
-      <int Value="62" Name="FirstVisibleLine"/>
-      <int Value="92" Name="CurrentLine"/>
+      <int Value="81" Name="FirstVisibleLine"/>
+      <int Value="91" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
@@ -40,57 +16,33 @@
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/mstack.h" Name="FileName"/>
-      <int Value="70" Name="FirstVisibleLine"/>
-      <int Value="91" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/internals.h" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="0" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/tracing.h" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="28" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/intercept.cpp" Name="FileName"/>
-      <int Value="19" Name="FirstVisibleLine"/>
-      <int Value="30" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/cpu_id.h" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="0" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/tracing.cpp" Name="FileName"/>
-      <int Value="6" Name="FirstVisibleLine"/>
-      <int Value="7" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
       <wxString Value="/usr/include/c++/4.6/iostream" Name="FileName"/>
       <int Value="44" Name="FirstVisibleLine"/>
       <int Value="74" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/hoard_primitives.cpp" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="8" Name="CurrentLine"/>
+      <wxString Value="/home/ubuntu/Workspace/hoard/hoard-allocator/src/intercept.cpp" Name="FileName"/>
+      <int Value="21" Name="FirstVisibleLine"/>
+      <int Value="44" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
-      <wxString Value="/home/ubuntu/Workspace/hoard_codelite/hoard/src/hoard_primitives.h" Name="FileName"/>
-      <int Value="375" Name="FirstVisibleLine"/>
-      <int Value="391" Name="CurrentLine"/>
+      <wxString Value="/home/ubuntu/Workspace/hoard/hoard-allocator/src/hoard_primitives.h" Name="FileName"/>
+      <int Value="278" Name="FirstVisibleLine"/>
+      <int Value="288" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/ubuntu/Workspace/hoard/hoard-allocator/src/hoard_primitives.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="19" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/ubuntu/Workspace/hoard/hoard-allocator/src/tracing.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="24" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>

@@ -38,7 +38,7 @@ struct superblock
 {
 	static const size_t SUPERBLOCK_SIZE = 65536;
 
-	int index_in_heap;
+	int id;
 
 	heap* owner;
 	int size_class;
@@ -124,7 +124,7 @@ struct heap
 	//should be power of 2
 	static const int EMPTINESS_GROUPS = 8;
 
-	mstack<mstack<mlinked_list<superblock*>>> emptiness_groups_by_size_class;
+	mstack<mstack<mlinked_list<superblock*>>> size_classes;
 
 	void init()
 	{
@@ -133,16 +133,16 @@ struct heap
 		used = 0;
 		
 		int n_size_classes = log2(superblock::SUPERBLOCK_SIZE);
-		emptiness_groups_by_size_class.init(n_size_classes);
-		emptiness_groups_by_size_class.size = n_size_classes;
+		size_classes.init(n_size_classes);
+		size_classes.size = n_size_classes;
 		for (int i = 0; i < n_size_classes; ++i)
 		{
 			//EMPTINESS_GROUPS+2 means that there's one more emptiness group for empty superblocks
 			//and one more for full superblocks
-			emptiness_groups_by_size_class[i].init(EMPTINESS_GROUPS + 2);
-			emptiness_groups_by_size_class[i].size = EMPTINESS_GROUPS + 2;
+			size_classes[i].init(EMPTINESS_GROUPS + 2);
+			size_classes[i].size = EMPTINESS_GROUPS + 2;
 			for (int j = 0; j < EMPTINESS_GROUPS + 2; ++j)
-				emptiness_groups_by_size_class[i][j].init();
+				size_classes[i][j].init();
 		}
 	}
 
@@ -156,7 +156,7 @@ struct hoard
 {
 	size_t emptiness_threshold_step;
 
-	int calculate_emtiness_group(size_t empty_bytes)
+	int calculate_emtpiness_group(size_t empty_bytes)
 	{
 		if (!empty_bytes) return 0;
 		size_t threshold = emptiness_threshold_step;
@@ -173,7 +173,7 @@ struct hoard
 
 	void* allocate_big_obj(size_t size, size_t alignment = ALIGNMENT) 
 	{
-		size_t requested_size = size + sizeof(block_header)+alignment-1;
+		size_t requested_size = size + sizeof(block_header)+alignment - 1;
 		void* mem = mmap(nullptr, requested_size, PROT_READ|PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 		char* data_ptr = round_up((char*)mem + sizeof(block_header), alignment);
 		void* header_ptr = data_ptr - sizeof(block_header);
@@ -186,6 +186,8 @@ struct hoard
 		return data_ptr;
 	};
 
+	static const int EG_EMPTY = heap::EMPTINESS_GROUPS + 1;
+
 	void* allocate(size_t size, size_t alignment = ALIGNMENT)
 	{
 		if (!already_initialized)
@@ -193,125 +195,106 @@ struct hoard
 			
 		if (!size) return nullptr;
 		
-		//calculate the desired block size class
-		/*size_t data_offset = round_up(sizeof(block_header), ALIGNMENT);*/
 		size_t requested_size = sizeof(block_header) + size + alignment - 1;
 		int size_class = log2(requested_size);
 		
 		if (requested_size >= superblock::SUPERBLOCK_SIZE/2)
 			return allocate_big_obj(size, alignment);
 		
-		//find the thread's heap
 		int heap_id = ((unsigned int)pthread_self()) % per_processor_heaps.size;
 		heap& h = per_processor_heaps[heap_id];
-			
+		pthread_mutex_lock(&h.mutex);
 		
-		auto& emptiness_groups = h.emptiness_groups_by_size_class[size_class];
-		//find an emptiness group of maximum full superblocks which have free blocks
+		auto& emptiness_groups = h.size_classes[size_class];
+		
+		//find a superblock with free blocks, from mostly full to empty
 		//i == 0 -- absolutely full, i == 1..n -- exactly what we need
 		int group = -1;
-		for (size_t i = 1; i < emptiness_groups.size; ++i)
-		if (emptiness_groups[i].size > 0) {
+		for (size_t i = 1; group==-1 && i < emptiness_groups.size; ++i)
+		if (emptiness_groups[i].size > 0)
 			group = i;
-			break; 
-		}
+			
 		//if no superblock found, check other size classes for fully empty superblocks
+		//and if one exists, resize it to the desired size c
 		if (group == -1)
 		{
-			int eg_empty = heap::EMPTINESS_GROUPS + 1;
-			for (size_t i = 0; i < h.emptiness_groups_by_size_class.size; ++i)
-			if (h.emptiness_groups_by_size_class[i][eg_empty].size > 0)
-			{   //reset superblock's size class to which we need
-				superblock* sb = h.emptiness_groups_by_size_class[i][eg_empty].pop_back();
+			for (size_t i = 0; i < h.size_classes.size; ++i)
+			if (h.size_classes[i][EG_EMPTY].size > 0)
+			{
+				superblock* sb = h.size_classes[i][EG_EMPTY].pop_back();
 				
 				sb->set_size_class(size_class);
-				sb->index_in_heap =
-					h.emptiness_groups_by_size_class[size_class][eg_empty].push_back(sb);
+				sb->id = h.size_classes[size_class][EG_EMPTY].push_back(sb);
 				
-				group = eg_empty;
+				group = EG_EMPTY;
 				break;
 			}
 		}
 		
-		
 		//if no superblock found, apply for superblock
-		if (group == -1)
-		{		
+		if (group == -1)		
 			group = add_superblock_to_heap(h, size_class);
-		}
 
-		superblock &sb = *emptiness_groups[group].peek_back();
-		void* base_address = sb.blocks.pop();
-		char* data_addr = round_up((char*)base_address + sizeof(block_header), alignment);
-		void* header_ptr = data_addr - sizeof(block_header);
-		block_header* header = (block_header*)header_ptr;
+		superblock *sb = emptiness_groups[group].peek_back();
+		
+		void* base_address = sb->blocks.pop();
+		char* data_ptr = round_up((char*)base_address + sizeof(block_header), alignment);
+		block_header* header = (block_header*)(data_ptr - sizeof(block_header));
 		header->alignment = alignment;
 		header->base_addr = base_address;
-		header->owner = emptiness_groups[group].peek_back();
+		header->owner = sb;
 		header->signature = block_header::HEADER_SIGNATURE;
 		header->total_size = requested_size;
-
 		
 		//move superblock to another emptiness group if needed
-		int new_emptiness_group = calculate_emtiness_group((1 << size_class) * sb.blocks.size);
+		int new_emptiness_group = calculate_emtpiness_group((1 << size_class) * sb->blocks.size);
 		if (new_emptiness_group != group)
 		{
-			superblock *s = emptiness_groups[group].pop_back();
-			
-			s->index_in_heap = emptiness_groups[new_emptiness_group].push_back(s);
-			
+			emptiness_groups[group].pop_back();
+			sb->id = emptiness_groups[new_emptiness_group].push_back(sb);
 		}
 
 		h.used += 1 << size_class;
-		
-		return data_addr;
+		pthread_mutex_unlock(&h.mutex);
+		return data_ptr;
 	}
 
 	//returns the emptiness group of the added superblock
 	int add_superblock_to_heap(heap& h, int size_class)
 	{
-		
-		mstack<mlinked_list<superblock*>> &global_heap_emptiness_groups = global_heap.emptiness_groups_by_size_class[size_class];
+		pthread_mutex_lock(&global_heap.mutex);
+		auto &global_heap_size_classes = global_heap.size_classes[size_class];
 		int emptiness_group = -1;
-		for (int i = global_heap_emptiness_groups.size - 1; i > 0; --i)
-		{
-			if (global_heap_emptiness_groups[i].size > 0)
-			{
+		for (int i = global_heap_size_classes.size - 1; emptiness_group == -1 && i > 0; --i)
+			if (global_heap_size_classes[i].size > 0)
 				emptiness_group = i;
-				break;
-			}
-		}
 		
 		if (emptiness_group != -1)
 		{
-			superblock *sb = global_heap.emptiness_groups_by_size_class[size_class][emptiness_group].pop_back();
-			
-			
-			
+			superblock *sb = global_heap.size_classes[size_class][emptiness_group].pop_back();
+			pthread_mutex_lock(&sb->mutex);
 			global_heap.allocated -= superblock::SUPERBLOCK_SIZE;
 			global_heap.used -= (1 << size_class) * ((superblock::SUPERBLOCK_SIZE >> size_class) - sb->blocks.size);
-			sb->index_in_heap = h.emptiness_groups_by_size_class[size_class][emptiness_group].push_back(sb);
+			sb->id = h.size_classes[size_class][emptiness_group].push_back(sb);
 			sb->owner = &h;
+			pthread_mutex_unlock(&sb->mutex);
 			h.allocated += superblock::SUPERBLOCK_SIZE;
 			h.used += (1 << size_class) * ((superblock::SUPERBLOCK_SIZE >> size_class) - sb->blocks.size);
-			
-			
-			
 		}
 		
 		if (emptiness_group == -1)
 		{
-			
-			int last_eg = h.emptiness_groups_by_size_class[size_class].size - 1;
+			int last_eg = h.size_classes[size_class].size - 1;
 			superblock *s = make_superblock(size_class);
 			
-			s->index_in_heap = h.emptiness_groups_by_size_class[size_class][last_eg].push_back(s);
+			s->id = h.size_classes[size_class][last_eg].push_back(s);
 			s->owner = &h;
 			
 			h.allocated += superblock::SUPERBLOCK_SIZE;
 			
 			emptiness_group = last_eg;
 		}
+		pthread_mutex_unlock(&global_heap.mutex);
 		return emptiness_group;
 	}
 
@@ -352,31 +335,32 @@ struct hoard
 			
 		superblock &sb = *header->owner;
 		heap &h = *sb.owner;
-
+		pthread_mutex_lock(&h.mutex);
 		
-		
-
-		int emptiness_group = calculate_emtiness_group((1 << sb.size_class) * sb.blocks.size);
-
+		int emptiness_group = calculate_emtpiness_group((1 << sb.size_class) * sb.blocks.size);
+		pthread_mutex_lock(&sb.mutex);
 		sb.free(header);
 		sb.owner->used -= 1 << sb.size_class;
 
 		//move-to-front heuristic
-		mlinked_list<superblock*> &s = h.emptiness_groups_by_size_class[sb.size_class][emptiness_group];
-		s.move_to_stack_top(sb.index_in_heap);
+		mlinked_list<superblock*> &s = h.size_classes[sb.size_class][emptiness_group];
+		s.move_to_stack_top(sb.id);
 
 		//arranging emptiness groups
-		int new_emptiness_group = calculate_emtiness_group((1 << sb.size_class) * sb.blocks.size);
+		int new_emptiness_group = calculate_emtpiness_group((1 << sb.size_class) * sb.blocks.size);
 		if (new_emptiness_group != emptiness_group)
 		{
-			superblock* sss = h.emptiness_groups_by_size_class[sb.size_class][emptiness_group].pop_back(); 
-			int index = h.emptiness_groups_by_size_class[sb.size_class][new_emptiness_group].push_back(sss);
-			sss ->index_in_heap= index;
+			superblock* sss = h.size_classes[sb.size_class][emptiness_group].pop_back(); 
+			int index = h.size_classes[sb.size_class][new_emptiness_group].push_back(sss);
+			sss ->id= index;
 		}
-		//return superblock to gloabal_heap
+		pthread_mutex_unlock(&sb.mutex);
+		
+		//return superblock to global_heap
 		if (&h != &h.owner->global_heap &&
 			h.used < h.allocated >> 1 && h.used < h.allocated - FREE_SUPERBLOCKS_LIMIT * superblock::SUPERBLOCK_SIZE)
 			return_block_to_global_heap(h, &sb);
+		pthread_mutex_unlock(&h.mutex);
 	}
 
 	void return_block_to_global_heap(heap& from, superblock* current_sb)
@@ -390,33 +374,36 @@ struct hoard
 		superblock *sb_to_move = NULL;
 
 		//check fully-empty superblocks first
-		for (size_t i = 0; i < from.emptiness_groups_by_size_class.size; ++i)
-		if (from.emptiness_groups_by_size_class[i][emptiness_group].size > 0)
+		for (size_t i = 0; i < from.size_classes.size; ++i)
+		if (from.size_classes[i][emptiness_group].size > 0)
 		{
-			sb_to_move = from.emptiness_groups_by_size_class[i][heap::EMPTINESS_GROUPS+1].pop_back();
+			sb_to_move = from.size_classes[i][heap::EMPTINESS_GROUPS+1].pop_back();
 			break;
 		}
 		
 		//then check other emptiness groups, from empty to full, if no empty superblock found
 		for (--emptiness_group; emptiness_group > 0 && !sb_to_move; --emptiness_group)
-		for (size_class = 0; size_class < from.emptiness_groups_by_size_class.size; ++size_class)
-		if (from.emptiness_groups_by_size_class[size_class][emptiness_group].size > 0)
+		for (size_class = 0; size_class < from.size_classes.size; ++size_class)
+		if (from.size_classes[size_class][emptiness_group].size > 0)
 		{
-			sb_to_move = from.emptiness_groups_by_size_class[size_class][emptiness_group].pop_back();
+			sb_to_move = from.size_classes[size_class][emptiness_group].pop_back();
 			++emptiness_group;
 			break;
 		}
 		
 		if (sb_to_move)
 		{
+			pthread_mutex_lock(&sb_to_move->mutex);
+			pthread_mutex_lock(&global_heap.mutex);
 			from.allocated -= superblock::SUPERBLOCK_SIZE;
 			from.used -= superblock::SUPERBLOCK_SIZE - sb_to_move->blocks.size * (1 << sb_to_move->size_class);
 			from.owner->global_heap.allocated += superblock::SUPERBLOCK_SIZE;
 			from.owner->global_heap.used += superblock::SUPERBLOCK_SIZE - sb_to_move->blocks.size * (1 << sb_to_move->size_class);
 				
-			sb_to_move->index_in_heap = global_heap.emptiness_groups_by_size_class[sb_to_move->size_class][emptiness_group].push_back(sb_to_move);
+			sb_to_move->id = global_heap.size_classes[sb_to_move->size_class][emptiness_group].push_back(sb_to_move);
 			sb_to_move->owner = &global_heap;
-			
+			pthread_mutex_unlock(&sb_to_move->mutex);
+			pthread_mutex_unlock(&global_heap.mutex);
 		}
 		else //idk if it will ever be false
 			std::abort();

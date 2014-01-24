@@ -1,7 +1,7 @@
-// compile (debug):   g++ --shared -std=c++11 -fPIC -g -o malloc-intercept.so malloc-intercept.cpp internals.cpp tracing.cpp
-// compile (release): g++ --shared -std=c++11 -fPIC -O2 -o malloc-intercept.so malloc-intercept.cpp internals.cpp tracing.cpp
+// compile (debug):   g++-4.8 --shared -std=c++11 -fPIC -g -o malloc-intercept.so malloc-intercept.cpp internals.cpp tracing.cpp
+// compile (release): g++-4.8 --shared -std=c++11 -fPIC -O2 -o malloc-intercept.so malloc-intercept.cpp internals.cpp tracing.cpp
 // run (trace):       LD_PRELOAD=./malloc-intercept.so kreversi
-// run (no trace):    LD_PRELOAD=./malloc-intercept.so MALLOC_INTERCEPT_NO_TRACE=1 kreversi
+// run (no trace):    LD_PRELOAD=./malloc-intercept.so NO_TRACE=1 kreversi
 // view symbols:      objdump -T --demangle malloc-intercept.so
 
 #include <cerrno>
@@ -29,7 +29,7 @@ namespace
 	{
 		recuirsion_guard()
 		{
-			single_thread_mode_lock.lock();
+			//single_thread_mode_lock.lock();
 			if (inside_malloc)
 			{
 				print("recursive call\n");
@@ -42,7 +42,7 @@ namespace
 		~recuirsion_guard()
 		{
 			inside_malloc = false;
-			single_thread_mode_lock.unlock();
+			//esingle_thread_mode_lock.unlock();
 		}
 
 	private:

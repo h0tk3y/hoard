@@ -7,8 +7,8 @@ ProjectName            :=hoard
 ConfigurationName      :=Release
 IntermediateDirectory  :=./Release
 OutDir                 := $(IntermediateDirectory)
-WorkspacePath          := "/home/ubuntu/Workspace/hoard_codelite/hoard"
-ProjectPath            := "/home/ubuntu/Workspace/hoard_codelite/hoard"
+WorkspacePath          := "/home/ubuntu/Workspace/hoard/hoard-allocator"
+ProjectPath            := "/home/ubuntu/Workspace/hoard/hoard-allocator"
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
@@ -69,39 +69,39 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/src_cpu_id$(ObjectSuffix): src/cpu_id.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/cpu_id.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_cpu_id$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/cpu_id.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_cpu_id$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_cpu_id$(PreprocessSuffix): src/cpu_id.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_cpu_id$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/cpu_id.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_cpu_id$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/cpu_id.cpp"
 
 $(IntermediateDirectory)/src_hoard_primitives$(ObjectSuffix): src/hoard_primitives.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/hoard_primitives.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_hoard_primitives$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/hoard_primitives.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_hoard_primitives$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_hoard_primitives$(PreprocessSuffix): src/hoard_primitives.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_hoard_primitives$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/hoard_primitives.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_hoard_primitives$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/hoard_primitives.cpp"
 
 $(IntermediateDirectory)/src_intercept$(ObjectSuffix): src/intercept.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/intercept.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_intercept$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/intercept.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_intercept$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_intercept$(PreprocessSuffix): src/intercept.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_intercept$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/intercept.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_intercept$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/intercept.cpp"
 
 $(IntermediateDirectory)/src_internals$(ObjectSuffix): src/internals.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/internals.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_internals$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/internals.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_internals$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_internals$(PreprocessSuffix): src/internals.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_internals$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/internals.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_internals$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/internals.cpp"
 
 $(IntermediateDirectory)/src_mstack$(ObjectSuffix): src/mstack.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/mstack.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_mstack$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/mstack.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_mstack$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_mstack$(PreprocessSuffix): src/mstack.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mstack$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/mstack.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mstack$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/mstack.cpp"
 
 $(IntermediateDirectory)/src_tests$(ObjectSuffix): src/tests.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/tests.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_tests$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/tests.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_tests$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_tests$(PreprocessSuffix): src/tests.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tests$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/tests.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tests$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/tests.cpp"
 
 $(IntermediateDirectory)/src_tracing$(ObjectSuffix): src/tracing.cpp 
-	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/tracing.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_tracing$(ObjectSuffix) $(IncludePath)
+	$(CompilerName) $(SourceSwitch) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/tracing.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_tracing$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_tracing$(PreprocessSuffix): src/tracing.cpp
-	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tracing$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard_codelite/hoard/src/tracing.cpp"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tracing$(PreprocessSuffix) "/home/ubuntu/Workspace/hoard/hoard-allocator/src/tracing.cpp"
 
 ##
 ## Clean

@@ -6,7 +6,7 @@ block_header* get_block_header(void* block_data)
 	block_header* result = (block_header*)((char*)block_data - sizeof(block_header));
 	if (result->signature == block_header::HEADER_SIGNATURE)
 		return result;
-	malloc_intercept::trace("bad block header: it has signature ", result->signature, "\n");
+	malloc_intercept::trace("bad block header in block at ", block_data);
 	return nullptr;
 };
 
